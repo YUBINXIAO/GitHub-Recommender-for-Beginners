@@ -1,14 +1,16 @@
 
+import os
 import requests
 
 def fetch_github_repositories(language='python', sort_by='stars', max_repos=100):
     # GitHub API endpoint for searching repositories
     url = f'https://api.github.com/search/repositories?q=language:{language}&sort={sort_by}&per_page=100'
 
-    
-    headers = {
-        'Authorization': 'token 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'
-    }
+    # Authorization is sent only when GITHUB_TOKEN is set, same rule as github_headers().
+    headers = {}
+    token = os.environ.get('GITHUB_TOKEN')
+    if token:
+        headers['Authorization'] = f'token {token}'
 
     repositories = []
     page = 1

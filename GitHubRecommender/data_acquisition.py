@@ -1,9 +1,28 @@
+import os
 import requests
 import base64
 import pandas as pd
 import sqlite3
 from bs4 import BeautifulSoup
 from data_processing import evaluate_learning_friendliness
+
+
+def github_headers():
+    """
+    Build the headers for a GitHub API request.
+
+    Reads a personal access token from the GITHUB_TOKEN environment variable.
+    The Authorization header is included only when that variable is set.
+
+    :return: Headers to send with the GitHub API request.
+    :rtype: dict
+    """
+    headers = {'Accept': 'application/vnd.github.v3+json'}
+    token = os.environ.get('GITHUB_TOKEN')
+    if token:
+        headers['Authorization'] = f'token {token}'
+    return headers
+
 
 def fetch_readme(repo_full_name):
     """
@@ -20,10 +39,7 @@ def fetch_readme(repo_full_name):
     readme_url = f"https://api.github.com/repos/{repo_full_name}/readme"
 
     # Set the headers for the GitHub API request
-    headers = {
-        'Authorization': 'token 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',
-        'Accept': 'application/vnd.github.v3+json'
-    }
+    headers = github_headers()
 
     # Send a GET request to fetch the README
     response = requests.get(readme_url, headers=headers)
@@ -63,7 +79,7 @@ def fetch_repositories(language, min_stars):
     url = f'https://api.github.com/search/repositories?q=language:{language}&sort=stars&min_stars={min_stars}'
 
     # Set the headers for the GitHub API request
-    headers = {'Accept': 'application/vnd.github.v3+json'}
+    headers = github_headers()
 
     # Send a GET request to fetch the repositories
     response = requests.get(url, headers=headers)
@@ -108,13 +124,6 @@ def fetch_repositories(language, min_stars):
     return repos
 
 
-
-# Example usage
-language = 'python'
-min_stars = 1000
-repositories = fetch_repositories(language, min_stars)
-#print(repositories)
-
 def fetch_default_branch(repo_full_name):
     """
     This function fetches the default branch of a given GitHub repository.
@@ -129,11 +138,8 @@ def fetch_default_branch(repo_full_name):
     # Construct the URL for fetching the repository data
     branch_url = f"https://api.github.com/repos/{repo_full_name}"
 
-    # Set the headers for the GitHub API request, including authorization
-    headers = {
-        'Authorization': 'token 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',
-        'Accept': 'application/vnd.github.v3+json'
-    }
+    # Set the headers for the GitHub API request
+    headers = github_headers()
 
     # Send a GET request to fetch the repository data
     response = requests.get(branch_url, headers=headers)
@@ -167,11 +173,8 @@ def fetch_issues(repo_full_name):
     # Construct the URL for fetching issues from the repository
     issues_url = f"https://api.github.com/repos/{repo_full_name}/issues"
 
-    # Set the headers for the GitHub API request, including authorization
-    headers = {
-        'Authorization': 'token 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',
-        'Accept': 'application/vnd.github.v3+json'
-    }
+    # Set the headers for the GitHub API request
+    headers = github_headers()
 
     # Send a GET request to fetch the issues
     response = requests.get(issues_url, headers=headers)
@@ -242,9 +245,6 @@ def fetch_latest_python_news():
     news_df = pd.DataFrame(news_data)
     return news_df
 
-# Example usage
-news_df = fetch_latest_python_news()
-print(news_df)
 
 def store_news_to_db(df):
     """

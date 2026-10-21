@@ -69,6 +69,17 @@ You can display the recommended repositories in a user-friendly format. For exam
        print(f"URL: {repo['url']}")
        print("\n")
 
+GitHub API Token
+----------------
+
+Repository search and other GitHub API calls read ``GITHUB_TOKEN`` from the
+environment. Set it before you run the tool so requests are authenticated.
+If the variable is unset, the ``Authorization`` header is omitted.
+
+.. code-block:: bash
+
+   export GITHUB_TOKEN=your_token_here
+
 That's it! You can now use the **GitHub Recommender for Beginners** package to discover GitHub repositories that match your preferences.
 
 For more advanced usage and additional features, refer to the package documentation and available methods.
