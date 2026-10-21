@@ -13,6 +13,23 @@ Introduction
 If you experience any problems or unexpected behavior while using this package,
 check the following troubleshooting tips for possible solutions.
 
+Issue: GitHub API rate limit
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Problem:**
+
+GitHub API calls fail with HTTP 403, or the response says the rate limit was
+exceeded.
+
+**Solution:**
+
+Export a personal access token as ``GITHUB_TOKEN`` and run the command again.
+The token is sent only when that variable is set.
+
+::
+
+   export GITHUB_TOKEN=your_token_here
+
 Issue: [Describe the Issue]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
